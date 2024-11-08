@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken');
 
 const isSignIn = (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        const token = req.cookies.token;
 
         if (!token) {
             throw new Error('No token provided')
