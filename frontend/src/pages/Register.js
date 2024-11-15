@@ -14,29 +14,33 @@ const Register = () => {
         dispatch(setUser(userDetails))
     }
     return (
-        <div className="mt-5">
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group mb-3">
-                    <label>Username</label>
-                    <input type='text' name='username' onChange={handleChange} className='form-control'
-                        value={userDetails.username} required />
+        <div className="home-page">
+            <div className="container-fluid">
+                <div className="mt-5">
+                    <h2>Register</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group mb-3">
+                            <label>Username</label>
+                            <input type='text' name='username' onChange={handleChange} className='form-control'
+                                value={userDetails.username} required />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                className="form-control"
+                                onChange={handleChange}
+                                value={userDetails.password}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary">Register</button>
+                    </form>
                 </div>
-                <div className="form-group mb-3">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        className="form-control"
-                        onChange={handleChange}
-                        value={userDetails.password}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Register</button>
-            </form>
+            </div>
         </div>
-    );
+    )
 };
 
 export default Register;

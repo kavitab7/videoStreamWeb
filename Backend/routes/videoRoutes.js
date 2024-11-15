@@ -7,7 +7,7 @@ const upload = require('../middleware/upload')
 router.get('/thumbnails', videoController.getAllThumbnails);
 
 // upload video with thumbnail
-router.post('/upload', upload.single('thumbnail'), videoController.uploadVideo);
+router.post('/upload', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }]), videoController.uploadVideo);
 
 // stream a video
 router.get('/stream/:id', videoController.streamVideo);

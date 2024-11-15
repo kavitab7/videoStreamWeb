@@ -16,8 +16,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use('/api/v1/video', videoRoutes)
-app.use('/api/v1/user', userRoutes)
+app.use('/api/v1/videos', videoRoutes)
+app.use('/api/v1/users', userRoutes)
 
 
 const PORT = process.env.PORT || 8080;

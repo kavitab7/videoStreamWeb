@@ -76,6 +76,12 @@ const Navbar = () => {
                                     >
                                         Login
                                     </button>
+                                    <button
+                                        className="dropdown-item"
+                                        onClick={() => navigate('/register')}
+                                    >
+                                        Sign Up
+                                    </button>
                                 </li>
                             )}
                         </ul>

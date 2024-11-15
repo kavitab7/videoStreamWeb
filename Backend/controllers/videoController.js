@@ -5,15 +5,30 @@ const mongoose = require('mongoose')
 //get all thumbnails
 exports.getAllThumbnails = async (req, res) => {
     try {
-        const videos = await Video.find({}, 'title description videoId thumbnailId')
+        const page = parseInt(req.query.page) || 1;
+        const limit = 6;
+        const skip = (page - 1) * limit;
+
+        const videos = await Video.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit)
         const thumbnails = videos.map(video => ({
             id: video._id,
             title: video.title,
             description: video.description,
             thumbnailId: video.thumbnailId
         }))
+        const totalThumbnails = thumbnails.length
+        const totalPages = Math.ceil(totalThumbnails / limit);
+        const hasMorePages = page < totalPages;
 
-        res.status(200).json(thumbnails);
+        res.status(200).json({
+            thumbnailsCount: totalThumbnails,
+            totalPages,
+            currentPage: page,
+            hasMorePages,
+            success: true,
+            thumbnails,
+            message: "Thumnails fetched successfully"
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "An error occurred while retrieving thumbnails" });
@@ -30,12 +45,21 @@ exports.uploadVideo = async (req, res) => {
         if (!title || !description || !userId) {
             return res.status(400).json({ message: "Title, description, and userId are required." });
         }
+        if (!req.files || !req.files.video) {
+            return res.status(400).json({ message: "Video file is required." });
+        }
+
+
+        const videoFile = req.files?.video?.[0];
+
+        const thumbnailFile = req.files?.thumbnail?.[0];
 
         const writestream = gfs.createWriteStream({
-            filename: `${Date.now()}-video.mp4`,
-            content_type: 'video/mp4',
-        })
-        req.pipe(writestream);
+            filename: `${Date.now()}-${videoFile.originalname}`,
+            content_type: videoFile.mimetype || 'video/mp4',
+        });
+
+        writestream.end(videoFile.buffer)
 
         writestream.on('close', async (file) => {
             try {
@@ -43,7 +67,7 @@ exports.uploadVideo = async (req, res) => {
                     title,
                     description,
                     videoId: file._id,
-                    thumbnailId: req.file?.id,
+                    thumbnailId: req.thumbnailFile?.id || null,
                     uploadedBy: userId,
                 })
 
