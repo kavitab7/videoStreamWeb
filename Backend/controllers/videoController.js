@@ -215,3 +215,49 @@ exports.getComments = async (req, res) => {
         res.status(500).json({ message: 'error retriving comments', error })
     }
 }
+
+// get likes for a video
+exports.getLikes = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const video = await Video.findById(videoId).populate('likes', 'username email');
+        if (!video) {
+            return res.status(404).json({ message: 'Video not found' });
+        }
+
+        res.status(200).json({
+            likesCount: video.likes.length,
+            likedUsers: video.likes
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error retrieving likes', error });
+    }
+};
+
+//toggle like unlike
+exports.toggleLike = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const { userId } = req.body;
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(404).json({ message: 'Video not found' });
+        }
+
+        const likeIndex = video.likes.indexOf(userId);
+
+        if (likeIndex === -1) {
+            video.likes.push(userId);
+            await video.save();
+            return res.status(200).json({ message: 'Video liked successfully', likesCount: video.likes.length });
+        } else {
+            video.likes.splice(likeIndex, 1);
+            await video.save();
+            return res.status(200).json({ message: 'Video unliked successfully', likesCount: video.likes.length });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error toggling like', error: err.message });
+    }
+};

@@ -18,7 +18,7 @@ const videoSchema = new mongoose.Schema({
     description: { type: String },
     videoId: { type: mongoose.Types.ObjectId, required: true },
     thumbnailId: { type: mongoose.Types.ObjectId },
-    likes: { type: Number, default: 0 },
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     uploadedBy: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
     comments: [commentSchema],
 }, {
