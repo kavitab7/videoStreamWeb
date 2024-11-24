@@ -6,6 +6,9 @@ const upload = require('../middleware/upload')
 //gets all thumbnails
 router.get('/thumbnails', videoController.getAllThumbnails);
 
+//get video by id
+router.get('/:videoId', videoController.getVideoDetails);
+
 // upload video with thumbnail
 router.post('/upload', upload.fields([{ name: 'video', maxCount: 1 }, { name: 'thumbnail', maxCount: 1 }]), videoController.uploadVideo);
 

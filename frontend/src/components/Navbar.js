@@ -62,6 +62,9 @@ const Navbar = () => {
                                     <li className="dropdown-item text-center">
                                         {user?.username || 'User'}
                                     </li>
+                                    <li className="dropdown-item text-center">
+                                        Profile
+                                    </li>
                                     <li>
                                         <button className="dropdown-item" onClick={handleLogout}>
                                             Logout

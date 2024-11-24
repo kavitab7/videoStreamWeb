@@ -35,6 +35,20 @@ exports.getAllThumbnails = async (req, res) => {
     }
 };
 
+//get video details 
+exports.getVideoDetails = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const video = await Video.findById(videoId).populate('uploadedBy', 'username');
+        if (!video) {
+            return res.status(404).json({ message: "Video not found" });
+        }
+        res.status(200).json(video);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching video details", error });
+    }
+};
+
 //upload video and thumbnail
 exports.uploadVideo = async (req, res) => {
     try {
